@@ -1,0 +1,102 @@
+<html>  
+          <head>  
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">  
+                    <script src="/sap/ui5/1/resources/sap-ui-core.js"  
+                      id="sap-ui-bootstrap"  
+                      data-sap-ui-libs="sap.ui.ux3,sap.ui.commons,sap.ui.table,sap.viz"  
+                      data-sap-ui-theme="sap_goldreflection" >
+              </script>
+              <style>
+                  .margin1 {
+                      margin : 15px;
+                  }
+                  .margin2 {
+                      margin-left : 10px;
+                  }
+                  .count-label {
+                      font-size : 24pt;
+                      margin : 0px 10px;
+                      padding :10px;
+                      border : 1px solid black;
+                      border-radius : 8px;
+                      font-family : "Courier New", Courier, monospace;
+                      color : green;
+                      background-color : black;
+                      font-weight: bold;
+                  }
+                  .count-title {
+                      margin : 10px;
+                      padding : 0px;
+                  }
+              </style>
+                    <script>  
+                                        sap.ui.localResources("views");
+                                        var view = sap.ui.view({id:"sensorReadings", viewName:"views.SensorReadings", type:sap.ui.core.mvc.ViewType.JS});
+                                        var inputTextField = new sap.ui.commons.TextField({
+                                            change : function(evt) {
+                                                //console.log(this.getValue());
+                                            }
+                                        })
+                                        //inputTextField.addStyleClass("margin2");
+                                        inputTextField.onsapenter(function() {
+                                            view.refreshChart(this.getValue());
+                                        });
+                                        var inputFieldContainer = new sap.ui.layout.VerticalLayout("h12",{
+                                            content : [
+                                                new sap.ui.commons.Label({ text: 'Enter hours: ', labelFor : inputTextField}),
+                                                inputTextField
+                                                ]
+                                        });
+                                        inputFieldContainer.addStyleClass('margin1');
+                                        var showHourlyAveragesButton = new sap.ui.commons.Button({
+                                            text : "Show Hourly Averages",
+                                            press : function(evt) {
+                                                //console.log("refreshing chart: " + inputTextField.getValue());
+                                                view.refreshChart(inputTextField.getValue(),'hourly');
+                                            }
+                                        });
+                                        var showDailyAveragesButton = new sap.ui.commons.Button({
+                                           text : "Show Daily Averages",
+                                           press : function(evt) {
+                                               view.refreshChart(inputTextField.getValue(),'daily');
+                                           }
+                                        });
+                                        showDailyAveragesButton.addStyleClass('margin1');
+                                        showHourlyAveragesButton.addStyleClass('margin1');
+                                        var hoursControl = new sap.ui.layout.VerticalLayout("hcontrol",{
+                                            content : [showHourlyAveragesButton,inputFieldContainer]
+                                        });
+                                        var counterTitleLabel = new sap.ui.commons.Label({text:"Number of entries in sensor\nreadings table:"});
+                                        counterTitleLabel.addStyleClass('count-title');
+                                        var counterLabel = new sap.ui.commons.Label({
+                                            text : "432678"
+                                        });
+                                        var counterLayout = new sap.ui.layout.VerticalLayout({
+                                            content : [counterTitleLabel,counterLabel]
+                                        })
+                                        counterLabel.addStyleClass('count-label');
+                                        var controls = new sap.ui.layout.HorizontalLayout("controls",{
+                                            content : [hoursControl,showDailyAveragesButton,counterLayout]
+                                        });
+                                        var vlayout = new sap.ui.layout.VerticalLayout("vlayout", {
+                                            width : '100%',
+                                            content : [view,controls]
+                                        });
+                                        //view.placeAt("content");  
+                                        vlayout.placeAt("content");
+                                        var updateCounter = function() {
+                                            $.getJSON( "services/countService.xsjs", function( data ) {
+                                                counterLabel.setText('' + data[0].count);
+                                                view.chart.getModel().refresh();
+                                            });
+                                        };
+                                        inputTextField.setValue(23);
+                                        updateCounter();
+                                        setInterval(updateCounter,5000);
+                    </script>  
+          </head>  
+          <body class="sapUiBody" role="application">  
+                    <div id="content"></div>  
+          </body>  
+</html>  
+ 

@@ -1,0 +1,9 @@
+role sfp00.iottest::iotaccess
+{
+catalog schema "NEO_2OTHEHQEZ56TA7WS5J4OSXXB7": SELECT, DELETE, INSERT;
+catalog sql object "NEO_2OTHEHQEZ56TA7WS5J4OSXXB7"."SENSOR_VALUES_SINCE_HOURS": EXECUTE;
+
+
+application privilege: "i806258trial.hana85.IOTTest::Basic";
+
+}

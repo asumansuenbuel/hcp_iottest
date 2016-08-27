@@ -1,0 +1,25 @@
+{
+     "exposed" : true,  
+                  
+     "authentication" :                                            
+            {
+               "method": "Form"   
+            },
+    "authorization1" : [ "sfp00.iottest::Basic" ],
+    "authorization" : null,
+  
+     "cache_control" : "must-revalidate", 
+
+     "cors" :                      
+            {
+             "enabled" : false
+            }, 
+                     
+     "enable_etags" : false,
+
+     "force_ssl" : false,
+     
+     "prevent_xsrf" : true,
+     
+    "default_file": "index.html"
+}
